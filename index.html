@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimal Productivity Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="top-bar">
+      <h1>✨ Minimal Dashboard</h1>
+
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <h1>✨ Minimal Dashboard</h1>
+    <div class="header-card card">
+      <div class="greeting" id="greeting-text"></div>
+      <div class="today" id="date-text"></div>
+    </div>
+
+    <section class="card" id="tasks">
+      <h2>Tasks</h2>
+
+      <input type="text" id="task-input" placeholder="Task name..." />
+
+      <input type="text" id="category-input" placeholder="Category (e.g. Work, Study, Personal)" />
+
+      <div class="priority-group">
+        <button class="p-chip low active" data-value="Low">Low</button>
+        <button class="p-chip medium" data-value="Medium">Medium</button>
+        <button class="p-chip high" data-value="High">High</button>
+
+        <input type="hidden" id="priority-input" value="Low">
+      </div>
+
+
+      <button onclick="addTask()">Add</button>
+
+      <div id="filter-bar"></div>
+      <input id="task-search" type="text" placeholder="Search tasks… (name, category, priority)" />
+
+      <ul id="task-list"></ul>
+
+    </section>
+
+
+    <section class="card" id="notes">
+      <h2>Notes</h2>
+      <textarea id="notes-area" placeholder="Write something..."></textarea>
+    </section>
+
+    <section class="card" id="goals">
+      <h2>Daily Goal</h2>
+
+      <input type="text" id="goal-input" placeholder="Today's goal..." />
+
+      <div class="progress-wrapper">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="bg" cx="60" cy="60" r="50"></circle>
+          <circle class="progress" cx="60" cy="60" r="50"></circle>
+        </svg>
+
+        <div class="progress-text">
+          <span id="progress-percent">0%</span>
+          <small>Tasks completed</small>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="card" id="reminders">
+      <h2>Quick Reminders</h2>
+      <input type="text" id="reminder-input" placeholder="Reminder..." />
+      <button onclick="addReminder()">Save</button>
+      <ul id="reminder-list"></ul>
+    </section>
+
+    <section class="card" id="quote">
+      <h2>Quote of the Day</h2>
+      <p id="quote-text">Loading...</p>
+    </section>
+
+  </div>
+
+  <!-- Firebase compat (easiest for simple sites) -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTQA2hVf_Cer7SlkEZcoK08iL_68uORLQ",
+      authDomain: "productivity-dashboard-45698.firebaseapp.com",
+      projectId: "productivity-dashboard-45698",
+      storageBucket: "productivity-dashboard-45698.firebasestorage.app",
+      messagingSenderId: "783578670872",
+      appId: "1:783578670872:web:5275e644d9a058aad4a06d",
+      measurementId: "G-RQ7D7ZW5NN"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+
+  <script src="app.js"></script>
+  <button id="fab" onclick="focusAddTask()">+</button>
+</body>
+
+</html>
