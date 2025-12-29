@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — Productivity Dashboard</title>
 
-  <!-- Global CSS -->
-  <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="auth.css" />
 
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
@@ -24,15 +21,11 @@
       appId: "1:783578670872:web:5275e644d9a058aad4a06d",
       measurementId: "G-RQ7D7ZW5NN"
     };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
   </script>
-  
-
-  <style>
-    /* (Reuse the same styles from login above) */
-  </style>
 </head>
 
 <body>
@@ -42,57 +35,56 @@
 
     <div class="input-group">
       <span class="icon">👤</span>
-      <input id="first-name" type="text" placeholder="First name" required>
+      <input id="first-name" type="text" placeholder="First name" required />
     </div>
 
     <div class="input-group">
       <span class="icon">👤</span>
-      <input id="last-name" type="text" placeholder="Last name" required>
+      <input id="last-name" type="text" placeholder="Last name" required />
     </div>
 
     <div class="input-group">
       <span class="icon">📧</span>
-      <input id="signup-email" type="email" placeholder="Email" required>
+      <input id="signup-email" type="email" placeholder="Email" required />
     </div>
 
     <div class="input-group">
       <span class="icon">🔒</span>
-      <input id="signup-password" type="password" placeholder="Password" required>
+      <input id="signup-password" type="password" placeholder="Password" required />
     </div>
 
     <button class="auth-btn" onclick="signup()">Sign Up</button>
 
     <p class="switch">
-      Already have an account? <a href="login.html">Login</a>
+      Already have an account?
+      <a href="login.html">Login</a>
     </p>
   </div>
+
+  <script>
+    function signup() {
+      const first = document.getElementById("first-name").value;
+      const last = document.getElementById("last-name").value;
+      const email = document.getElementById("signup-email").value;
+      const password = document.getElementById("signup-password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const uid = userCredential.user.uid;
+
+          return db.collection("users").doc(uid).set({
+            firstName: first,
+            lastName: last,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          alert("Account created!");
+          window.location.href = "login.html";
+        })
+        .catch(err => alert(err.message));
+    }
+  </script>
 </body>
-
-<script>
-  function signup() {
-  const first = document.getElementById("first-name").value;
-  const last = document.getElementById("last-name").value;
-  const email = document.getElementById("signup-email").value;
-  const password = document.getElementById("signup-password").value;
-
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      const uid = userCredential.user.uid;
-
-      return db.collection("users").doc(uid).set({
-        firstName: first,
-        lastName: last,
-        email: email,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    })
-    .then(() => {
-      alert("Account created!");
-      window.location.href = "login.html";
-    })
-    .catch(err => alert(err.message));
-}
-
-</script>
-
 </html>
