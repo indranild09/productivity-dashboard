@@ -440,3 +440,15 @@ select option:hover {
 .p-chip.medium.active { background: #facc15; color: #4a3800; }
 .p-chip.high.active { background: #f87171; color: #3d0606; }
 
+
+.danger-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.danger-btn:hover {
+  background: #c9302c;
+}

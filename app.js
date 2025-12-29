@@ -10,8 +10,66 @@ auth.onAuthStateChanged(user => {
   currentUser = user;
 
   if (user) {
+    const userRef = db.collection("users").doc(user.uid);
+
+    userRef.get().then(doc => {
+      if (!doc.exists) {
+
+        // fallback details if older users did not save names
+        userRef.set({
+          firstName: "User",
+          lastName: "",
+          email: user.email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    });
+
     loadTasksFromDB();
     loadRemindersFromDB();
+
+    const deleteBtn = document.getElementById("delete-account-btn");
+
+if (deleteBtn) {
+  deleteBtn.addEventListener("click", async () => {
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const confirmDelete = confirm(
+      "Are you sure? This will permanently delete your account and all data!"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      // 1️⃣ Re-authenticate (Firebase requires recent login)
+      const email = prompt("Please confirm your email to continue:");
+      const password = prompt("Enter your password:");
+
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        email,
+        password
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // 2️⃣ Delete Firestore data
+      await db.collection("users").doc(user.uid).delete();
+
+      // (optional) delete subcollections if you want later
+
+      // 3️⃣ Delete from Firebase Auth
+      await user.delete();
+
+      alert("Account deleted successfully.");
+      window.location.href = "signup.html";
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
+  });
+}
 
     // NOTES
     db.collection("users")
