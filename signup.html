@@ -12,6 +12,8 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBTQA2hVf_Cer7SlkEZcoK08iL_68uORLQ",
@@ -24,7 +26,9 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
   </script>
+  
 
   <style>
     /* (Reuse the same styles from login above) */
@@ -66,16 +70,29 @@
 
 <script>
   function signup() {
-    const email = document.getElementById("signup-email").value;
-    const password = document.getElementById("signup-password").value;
+  const first = document.getElementById("first-name").value;
+  const last = document.getElementById("last-name").value;
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
 
-    auth.createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        alert("Account created!");
-        window.location.href = "login.html";
-      })
-      .catch(err => alert(err.message));
-  }
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      const uid = userCredential.user.uid;
+
+      return db.collection("users").doc(uid).set({
+        firstName: first,
+        lastName: last,
+        email: email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(() => {
+      alert("Account created!");
+      window.location.href = "login.html";
+    })
+    .catch(err => alert(err.message));
+}
+
 </script>
 
 </html>

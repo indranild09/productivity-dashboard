@@ -433,7 +433,7 @@ function addReminder() {
 
 /* ================= HEADER ================= */
 
-function setHeader(name = "there") {
+function setHeader() {
   const greetingEl = document.getElementById("greeting-text");
   const dateEl = document.getElementById("date-text");
 
@@ -441,11 +441,23 @@ function setHeader(name = "there") {
   const hour = now.getHours();
 
   let greeting = "Hello";
+
   if (hour < 12) greeting = "Good morning";
   else if (hour < 18) greeting = "Good afternoon";
   else greeting = "Good evening";
 
-  greetingEl.textContent = `${greeting}, ${name} 👋`;
+  // load name from Firestore
+  db.collection("users")
+    .doc(currentUser.uid)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        greetingEl.textContent = `${greeting}, ${data.firstName} 👋`;
+      } else {
+        greetingEl.textContent = `${greeting} 👋`;
+      }
+    });
 
   dateEl.textContent = now.toLocaleDateString("en-IN", {
     weekday: "long",
@@ -454,6 +466,7 @@ function setHeader(name = "there") {
     day: "numeric"
   });
 }
+
 
 
 /* ================= NOTES ================= */
