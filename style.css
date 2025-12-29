@@ -195,6 +195,13 @@ button {
   font-size: 15px;
 }
 
+.card h2 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #e5e7eb;
+  letter-spacing: 0.4px;
+  }
+
 /* -------- MOBILE -------- */
 @media (max-width: 600px) {
   h1 {
