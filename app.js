@@ -74,7 +74,7 @@ auth.onAuthStateChanged(user => {
       });
     }
 
-    // NOTES
+/*     // NOTES
     window.addNote = function () {
   const text = notesArea.value.trim();
   if (!text) return;
@@ -184,7 +184,7 @@ function loadNotes() {
           });
         });
     }
-
+ */
 
 
     // LOAD FIRST NAME FOR GREETING
