@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -62,6 +63,11 @@
   </div>
 
   <script>
+    auth.onAuthStateChanged(user => {
+      if (user) window.location.href = "index.html";
+    });
+
+
     function signup() {
       const first = document.getElementById("first-name").value;
       const last = document.getElementById("last-name").value;
@@ -87,4 +93,5 @@
     }
   </script>
 </body>
+
 </html>

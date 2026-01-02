@@ -55,6 +55,10 @@
   </div>
 
   <script>
+    auth.onAuthStateChanged(user => {
+      if (user) window.location.href = "index.html";
+    });
+
     function login() {
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;

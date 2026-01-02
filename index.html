@@ -18,8 +18,6 @@
 
       <button class="logout-btn" onclick="logout()">Logout</button>
 
-
-
     </div>
 
     <div class="header-card card">
@@ -50,6 +48,9 @@
 
       <ul id="task-list"></ul>
 
+      <h4>Completed</h4>
+      <ul id="completed-list"></ul>
+
     </section>
 
 
@@ -58,7 +59,7 @@
 
       <textarea id="notes-area" placeholder="Write a note..."></textarea>
 
-      <button onclick="addNote()">Save Note</button>
+      <button id="save-note-btn" onclick="addNote()">Save Note</button>
 
       <ul id="notes-list"></ul>
 
@@ -75,17 +76,17 @@
     </section>
 
 
-      <div class="progress-wrapper">
-        <svg class="progress-ring" width="120" height="120">
-          <circle class="bg" cx="60" cy="60" r="50"></circle>
-          <circle class="progress" cx="60" cy="60" r="50"></circle>
-        </svg>
+    <div class="progress-wrapper">
+      <svg class="progress-ring" width="120" height="120">
+        <circle class="bg" cx="60" cy="60" r="50"></circle>
+        <circle class="progress" cx="60" cy="60" r="50"></circle>
+      </svg>
 
-        <div class="progress-text">
-          <span id="progress-percent">0%</span>
-          <small>Tasks completed</small>
-        </div>
+      <div class="progress-text">
+        <span id="progress-percent">0%</span>
+        <small>Tasks completed</small>
       </div>
+    </div>
     </section>
 
 
@@ -120,6 +121,7 @@
   </script>
 
   <script src="firebase.js"></script>
+  <script src="utils.js"></script>
 
   <!-- dashboard related -->
   <script src="notes.js"></script>
@@ -132,6 +134,7 @@
 
   <script src="reminders.js"></script>
   <button id="fab" onclick="focusAddTask()">+</button>
+  <div id="toast-container"></div>
 </body>
 
 </html>

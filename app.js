@@ -5,6 +5,10 @@ let currentFilter = "All";
 let currentSearch = "";
 
 auth.onAuthStateChanged(user => {
+   if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
   console.log("AUTH USER:", user?.uid);
 
   currentUser = user;

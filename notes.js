@@ -41,7 +41,12 @@ function loadNotes() {
 
 function addNote() {
   const field = document.getElementById("notes-area");
-  if (!field || !field.value.trim() || !currentUser) return;
+  const btn = document.getElementById("save-note-btn");
+
+  if (!field.value.trim() || !currentUser) return;
+
+  btn.disabled = true;
+  btn.textContent = "Saving...";
 
   db.collection("users")
     .doc(currentUser.uid)
@@ -49,7 +54,13 @@ function addNote() {
     .add({
       text: field.value.trim(),
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      field.value = "";
+      showToast("Note saved");
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = "Save Note";
     });
-
-  field.value = "";
 }
