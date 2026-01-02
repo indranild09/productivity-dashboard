@@ -376,7 +376,15 @@ function addTask() {
   const category = document.getElementById("category-input");
   const priority = document.getElementById("priority-input");
 
-  if (!input.value.trim()) return;
+  if (!currentUser) {
+    alert("Login required");
+    return;
+  }
+
+  if (!input.value.trim()) {
+    alert("Please enter a task name");
+    return;
+  }
 
   const priorityMap = { High: 3, Medium: 2, Low: 1 };
 
@@ -390,12 +398,15 @@ function addTask() {
       priorityValue: priorityMap[priority.value],
       done: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-  input.value = "";
-  category.value = "";
-  priority.value = "Low";
+    })
+    .then(() => {
+      input.value = "";
+      category.value = "";
+      priority.value = "Low";
+    })
+    .catch(err => alert(err.message));
 }
+
 
 function focusAddTask() {
   document.getElementById("task-input").focus();
