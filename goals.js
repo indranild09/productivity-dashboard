@@ -5,9 +5,12 @@ function loadGoals() {
 
   if (goalsUnsubscribe) goalsUnsubscribe();
 
+  const today = new Date().toDateString();   // 👈 today marker
+
   goalsUnsubscribe = db.collection("users")
     .doc(currentUser.uid)
     .collection("goals")
+    .where("day", "==", today)               // 👈 only today's goals
     .orderBy("createdAt", "desc")
     .onSnapshot(snapshot => {
       const list = document.getElementById("goal-list");
@@ -48,7 +51,8 @@ function saveGoal() {
     .collection("goals")
     .add({
       text: field.value.trim(),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      day: new Date().toDateString()        // 👈 mark as today
     });
 
   field.value = "";
