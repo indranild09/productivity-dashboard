@@ -12,13 +12,13 @@
 <body>
 
   <div class="container">
-<button id="delete-account-btn" class="danger-btn">  Delete My Account </button>
+    <button id="delete-account-btn" class="danger-btn"> Delete My Account </button>
     <div class="top-bar">
       <h1>✨ Minimal Productivity Dashboard</h1>
 
       <button class="logout-btn" onclick="logout()">Logout</button>
 
-      
+
 
     </div>
 
@@ -56,12 +56,22 @@
     <section class="card" id="notes">
       <h2>Notes</h2>
       <textarea id="notes-area" placeholder="Write something..."></textarea>
+      <textarea id="notes-area" placeholder="Write a note..."></textarea>
+
+      <button onclick="addNote()">Save Note</button>
+
+      <ul id="notes-list"></ul>
+
     </section>
 
     <section class="card" id="goals">
       <h2>Daily Goal</h2>
 
       <input type="text" id="goal-input" placeholder="Today's goal..." />
+      <button onclick="addGoal()">Save Goal</button>
+
+      <ul id="goal-list"></ul>
+
 
       <div class="progress-wrapper">
         <svg class="progress-ring" width="120" height="120">

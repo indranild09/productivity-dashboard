@@ -27,49 +27,52 @@ auth.onAuthStateChanged(user => {
 
     loadTasksFromDB();
     loadRemindersFromDB();
+    loadNotes();
+    loadGoals();
+
 
     const deleteBtn = document.getElementById("delete-account-btn");
 
-if (deleteBtn) {
-  deleteBtn.addEventListener("click", async () => {
-    const user = auth.currentUser;
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", async () => {
+        const user = auth.currentUser;
 
-    if (!user) return;
+        if (!user) return;
 
-    const confirmDelete = confirm(
-      "Are you sure? This will permanently delete your account and all data!"
-    );
+        const confirmDelete = confirm(
+          "Are you sure? This will permanently delete your account and all data!"
+        );
 
-    if (!confirmDelete) return;
+        if (!confirmDelete) return;
 
-    try {
-      // 1️⃣ Re-authenticate (Firebase requires recent login)
-      const email = prompt("Please confirm your email to continue:");
-      const password = prompt("Enter your password:");
+        try {
+          // 1️⃣ Re-authenticate (Firebase requires recent login)
+          const email = prompt("Please confirm your email to continue:");
+          const password = prompt("Enter your password:");
 
-      const credential = firebase.auth.EmailAuthProvider.credential(
-        email,
-        password
-      );
+          const credential = firebase.auth.EmailAuthProvider.credential(
+            email,
+            password
+          );
 
-      await user.reauthenticateWithCredential(credential);
+          await user.reauthenticateWithCredential(credential);
 
-      // 2️⃣ Delete Firestore data
-      await db.collection("users").doc(user.uid).delete();
+          // 2️⃣ Delete Firestore data
+          await db.collection("users").doc(user.uid).delete();
 
-      // (optional) delete subcollections if you want later
+          // (optional) delete subcollections if you want later
 
-      // 3️⃣ Delete from Firebase Auth
-      await user.delete();
+          // 3️⃣ Delete from Firebase Auth
+          await user.delete();
 
-      alert("Account deleted successfully.");
-      window.location.href = "signup.html";
-    } catch (err) {
-      console.log(err);
-      alert(err.message);
+          alert("Account deleted successfully.");
+          window.location.href = "signup.html";
+        } catch (err) {
+          console.log(err);
+          alert(err.message);
+        }
+      });
     }
-  });
-}
 
     // NOTES
     db.collection("users")
@@ -81,6 +84,40 @@ if (deleteBtn) {
         if (doc.exists) notesArea.value = doc.data().text;
       });
 
+    function addNote() {
+      const text = notesArea.value.trim();
+      if (!text) return;
+
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("notes")
+        .add({
+          text,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+      notesArea.value = "";
+    }
+
+    function loadNotes() {
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("notes")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          const list = document.getElementById("notes-list");
+          list.innerHTML = "";
+
+          snapshot.forEach(doc => {
+            const n = doc.data();
+
+            const li = document.createElement("li");
+            li.textContent = n.text;
+            list.appendChild(li);
+          });
+        });
+    }
+
     // GOAL
     db.collection("users")
       .doc(user.uid)
@@ -90,6 +127,42 @@ if (deleteBtn) {
       .then(doc => {
         if (doc.exists) goalInput.value = doc.data().text;
       });
+
+    function addGoal() {
+      const text = goalInput.value.trim();
+      if (!text) return;
+
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("goals")
+        .add({
+          text,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+      goalInput.value = "";
+    }
+
+    function loadGoals() {
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("goals")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          const list = document.getElementById("goal-list");
+          list.innerHTML = "";
+
+          snapshot.forEach(doc => {
+            const g = doc.data();
+
+            const li = document.createElement("li");
+            li.textContent = g.text;
+            list.appendChild(li);
+          });
+        });
+    }
+
+
 
     // LOAD FIRST NAME FOR GREETING
     db.collection("users")
