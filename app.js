@@ -75,14 +75,20 @@ auth.onAuthStateChanged(user => {
     }
 
     // NOTES
-    db.collection("users")
-      .doc(user.uid)
-      .collection("data")
-      .doc("notes")
-      .get()
-      .then(doc => {
-        if (doc.exists) notesArea.value = doc.data().text;
-      });
+    window.addNote = function () {
+  const text = notesArea.value.trim();
+  if (!text) return;
+
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("notes")
+    .add({
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+  notesArea.value = "";
+};
 
     function addNote() {
   const text = notesArea.value.trim();
@@ -100,7 +106,7 @@ auth.onAuthStateChanged(user => {
 }
 
 
-    function loadNotes() {
+    window.loadNotes = function () {
   db.collection("users")
     .doc(currentUser.uid)
     .collection("notes")
@@ -111,14 +117,12 @@ auth.onAuthStateChanged(user => {
 
       snapshot.forEach(doc => {
         const n = doc.data();
-
         const li = document.createElement("li");
         li.textContent = n.text;
-
         list.appendChild(li);
       });
     });
-}
+};
 
 
     // GOAL
