@@ -85,38 +85,41 @@ auth.onAuthStateChanged(user => {
       });
 
     function addNote() {
-      const text = notesArea.value.trim();
-      if (!text) return;
+  const text = notesArea.value.trim();
+  if (!text) return;
 
-      db.collection("users")
-        .doc(currentUser.uid)
-        .collection("notes")
-        .add({
-          text,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("notes")
+    .add({
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
-      notesArea.value = "";
-    }
+  notesArea.value = "";
+}
+
 
     function loadNotes() {
-      db.collection("users")
-        .doc(currentUser.uid)
-        .collection("notes")
-        .orderBy("createdAt", "desc")
-        .onSnapshot(snapshot => {
-          const list = document.getElementById("notes-list");
-          list.innerHTML = "";
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("notes")
+    .orderBy("createdAt", "desc")
+    .onSnapshot(snapshot => {
+      const list = document.getElementById("notes-list");
+      list.innerHTML = "";
 
-          snapshot.forEach(doc => {
-            const n = doc.data();
+      snapshot.forEach(doc => {
+        const n = doc.data();
 
-            const li = document.createElement("li");
-            li.textContent = n.text;
-            list.appendChild(li);
-          });
-        });
-    }
+        const li = document.createElement("li");
+        li.textContent = n.text;
+
+        list.appendChild(li);
+      });
+    });
+}
+
 
     // GOAL
     db.collection("users")
