@@ -90,23 +90,7 @@ auth.onAuthStateChanged(user => {
   notesArea.value = "";
 };
 
-    function addNote() {
-  const text = notesArea.value.trim();
-  if (!text) return;
-
-  db.collection("users")
-    .doc(currentUser.uid)
-    .collection("notes")
-    .add({
-      text,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-  notesArea.value = "";
-}
-
-
-    window.loadNotes = function () {
+window.loadNotes = function () {
   db.collection("users")
     .doc(currentUser.uid)
     .collection("notes")
@@ -117,12 +101,28 @@ auth.onAuthStateChanged(user => {
 
       snapshot.forEach(doc => {
         const n = doc.data();
+
         const li = document.createElement("li");
         li.textContent = n.text;
+
+        const del = document.createElement("button");
+        del.textContent = "x";
+        del.className = "delete";
+
+        del.onclick = () => {
+          db.collection("users")
+            .doc(currentUser.uid)
+            .collection("notes")
+            .doc(doc.id)
+            .delete();
+        };
+
+        li.appendChild(del);
         list.appendChild(li);
       });
     });
 };
+
 
 
     // GOAL
@@ -620,17 +620,7 @@ function setHeader() {
 
 /* ================= NOTES ================= */
 
-const notesArea = document.getElementById("notes-area");
 
-notesArea.addEventListener("input", () => {
-  if (!currentUser) return;
-
-  db.collection("users")
-    .doc(currentUser.uid)
-    .collection("data")
-    .doc("notes")
-    .set({ text: notesArea.value });
-});
 
 
 /* ================= GOAL ================= */
