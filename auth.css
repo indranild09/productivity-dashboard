@@ -141,3 +141,15 @@ body {
     max-width: 420px;
   }
 }
+
+.forgot {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.forgot a {
+  color: #2149ff;
+  font-weight: 600;
+  cursor: pointer;
+}

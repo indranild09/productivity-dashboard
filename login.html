@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,6 +43,10 @@
     </div>
 
     <button class="auth-btn" onclick="login()">Login</button>
+    <p class="forgot">
+      <a href="#" id="forgotPassword" onclick="return false;">Forgot password?</a>
+    </p>
+
 
     <p class="switch">
       Don’t have an account?
@@ -60,6 +65,28 @@
         })
         .catch(err => alert(err.message));
     }
+
+    const forgotPassword = document.getElementById("forgotPassword");
+
+    forgotPassword.addEventListener("click", () => {
+      const email = document.getElementById("login-email").value;
+
+      if (!email) {
+        alert("Please enter your email first.");
+        return;
+      }
+
+      firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(() => {
+          alert("Password reset email sent. Check your inbox.");
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
   </script>
 </body>
+
 </html>
