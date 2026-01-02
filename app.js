@@ -160,28 +160,6 @@ function setHeader() {
   });
 }
 
-
-
-/* ================= NOTES ================= */
-
-
-
-
-/* ================= GOAL ================= 
-
-const goalInput = document.getElementById("goal-input");
-
-goalInput.addEventListener("input", () => {
-  if (!currentUser) return;
-
-  db.collection("users")
-    .doc(currentUser.uid)
-    .collection("data")
-    .doc("goal")
-    .set({ text: goalInput.value });
-});
-*/
-
 /* ================= QUOTE ================= */
 
 fetch("https://api.quotable.io/random")
@@ -207,8 +185,6 @@ function logout() {
     });
 }
 
-
-
 const taskSearch = document.getElementById("task-search");
 
 if (taskSearch) {
@@ -229,9 +205,6 @@ chipButtons.forEach(btn => {
     priorityInput.value = btn.dataset.value;
   });
 });
-
-
-
 
 window.onload = () => {
   updateProgress();
