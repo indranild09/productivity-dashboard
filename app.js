@@ -90,20 +90,36 @@ auth.onAuthStateChanged(user => {
   notesArea.value = "";
 };
 
-window.loadNotes = function () {
+function addNote() {
+  const text = document.getElementById("notes-area").value.trim();
+  if (!text || !currentUser) return;
+
+  db.collection("users")
+    .doc(currentUser.uid)
+    .collection("notes")
+    .add({
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+  document.getElementById("notes-area").value = "";
+}
+
+
+
+function loadNotes() {
   db.collection("users")
     .doc(currentUser.uid)
     .collection("notes")
     .orderBy("createdAt", "desc")
     .onSnapshot(snapshot => {
+
       const list = document.getElementById("notes-list");
       list.innerHTML = "";
 
       snapshot.forEach(doc => {
-        const n = doc.data();
-
         const li = document.createElement("li");
-        li.textContent = n.text;
+        li.textContent = doc.data().text;
 
         const del = document.createElement("button");
         del.textContent = "x";
@@ -121,7 +137,7 @@ window.loadNotes = function () {
         list.appendChild(li);
       });
     });
-};
+}
 
 
 
