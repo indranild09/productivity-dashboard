@@ -30,7 +30,7 @@ auth.onAuthStateChanged(user => {
     });
 
     loadTasksFromDB();
-    //loadRemindersFromDB();
+    loadRemindersFromDB();
     loadNotes();
     loadGoals();
 
